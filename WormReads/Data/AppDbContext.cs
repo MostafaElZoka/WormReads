@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WormReads.Models;
 
 namespace WormReads.Data
 {
@@ -7,5 +8,6 @@ namespace WormReads.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
+        public DbSet<Category> Categories { get; set; }
     }
 }
