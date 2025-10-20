@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using WormReads.Data;
+
 namespace WormReads
 {
     public class Program
@@ -8,6 +11,9 @@ namespace WormReads
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<AppDbContext>
+                (o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
