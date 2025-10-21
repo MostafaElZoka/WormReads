@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 using WormReads.Data;
 using WormReads.Models;
 
@@ -48,6 +49,29 @@ namespace WormReads.Controllers
                 return RedirectToAction("Index");
             }
             return View(category);
+
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var category = dbContext.Categories.FirstOrDefault(c => c.Id == id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
+        }
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePost(int id)
+        {
+            var category = dbContext.Categories.FirstOrDefault(c => c.Id == id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            dbContext.Categories.Remove(category);
+            dbContext.SaveChanges();
+            return RedirectToAction("Index");
 
         }
     }
