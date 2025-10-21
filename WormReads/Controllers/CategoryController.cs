@@ -19,9 +19,14 @@ namespace WormReads.Controllers
         [HttpPost]
         public IActionResult Create(Category category)
         {
-            dbContext.Categories.Add(category);
-            dbContext.SaveChanges();
-            return RedirectToAction("Index");
+            if(ModelState.IsValid)
+            {
+                dbContext.Categories.Add(category);
+                dbContext.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View();
+
         }
     }
 }

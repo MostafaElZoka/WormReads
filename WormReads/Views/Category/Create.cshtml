@@ -5,14 +5,17 @@
         <div class="row text-center">
             <h1>Create Category</h1>
         </div>
-        <div>
-            <label asp-for="Name" class="form-label mt-4">Category Name</label>
-            <input asp-for="Name" class="form-control" placeholder="Enter Category name" fdprocessedid="ajw5sv">
+        <div class="m-3">
+            <label asp-for="Name" class="form-label mb-2 mt-4">Category Name</label>
+            <input asp-for="Name" class="form-control mb-2" placeholder="Enter Category name">
+            <span class="text-danger"></span>
         </div>
-        <div>
-            <label asp-for="DisplayOrder" class="form-label mt-4">Display Order</label>
-            <input asp-for="DisplayOrder" class="form-control" placeholder="Enter Display Order">
+        <div class="m-3">
+            <label asp-for="DisplayOrder" class="form-label mt-4 mb-2">Display Order</label>
+            <input asp-for="DisplayOrder" class="form-control mb-2" placeholder="Enter Display Order">
+            <span class="text-danger" asp-validation-for="DisplayOrder"></span>
         </div>
+
         <div class="row p-3 d-flex justify-content-between mx-auto">
             <div class="col-6 col-md-3">
                 <button type="submit" class="btn btn-primary form-control">Submit</button>
@@ -25,3 +28,9 @@
     </div>
 
 </form>
+
+@section scripts{
+@{
+       <partial name="_ValidationScriptsPartial" />
+}
+ }
