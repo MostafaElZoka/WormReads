@@ -28,5 +28,27 @@ namespace WormReads.Controllers
             return View();
 
         }
+
+        public IActionResult Edit(int id)
+        {
+            var category = dbContext.Categories.FirstOrDefault(c => c.Id == id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
+        }
+        [HttpPost]
+        public IActionResult Edit(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                dbContext.Categories.Update(category);
+                dbContext.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(category);
+
+        }
     }
 }
