@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WormReads.Data;
 
 namespace WormReads.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoryController(AppDbContext dbContext) : Controller
     {
         public IActionResult Index()
         {
-            return View();
+            var categories = dbContext.Categories.ToList();
+            return View(categories);
         }
     }
 }
