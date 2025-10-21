@@ -24,6 +24,7 @@ namespace WormReads.Controllers
             {
                 dbContext.Categories.Add(category);
                 dbContext.SaveChanges();
+                TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index");
             }
             return View();
@@ -46,6 +47,7 @@ namespace WormReads.Controllers
             {
                 dbContext.Categories.Update(category);
                 dbContext.SaveChanges();
+                TempData["success"] = "Category updated successfully";
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -71,6 +73,7 @@ namespace WormReads.Controllers
             }
             dbContext.Categories.Remove(category);
             dbContext.SaveChanges();
+            TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
 
         }
