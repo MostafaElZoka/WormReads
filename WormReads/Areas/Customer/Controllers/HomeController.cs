@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WormReads.Models;
 
-namespace WormReads.Controllers
+namespace WormReads.Areas.Customer.Controllers
 {
     public class HomeController : Controller
     {

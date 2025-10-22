@@ -5,7 +5,7 @@ using WormReads.DataAccess.Repository.Category_Repository;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
 using WormReads.Models;
 
-namespace WormReads.Controllers
+namespace WormReads.Areas.Admin.Controllers
 {
     public class CategoryController(IUnitOfWork unitOfWork) : Controller
     {

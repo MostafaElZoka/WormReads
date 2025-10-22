@@ -21,4 +21,8 @@
     <ProjectReference Include="..\WormReads.Models\WormReads.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
