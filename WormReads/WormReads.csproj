@@ -16,4 +16,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WormReads.DataAccess\WormReads.DataAccess.csproj" />
+    <ProjectReference Include="..\WormReads.Models\WormReads.Models.csproj" />
+  </ItemGroup>
+
 </Project>
