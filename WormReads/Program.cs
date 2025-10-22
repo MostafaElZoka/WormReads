@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WormReads.Data;
+using WormReads.DataAccess.Repository.Category_Repository;
 
 namespace WormReads
 {
@@ -14,6 +15,8 @@ namespace WormReads
 
             builder.Services.AddDbContext<AppDbContext>
                 (o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
 
             var app = builder.Build();
 

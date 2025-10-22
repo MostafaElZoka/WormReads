@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
 using WormReads.Data;
+using WormReads.DataAccess.Repository.Category_Repository;
 using WormReads.Models;
 
 namespace WormReads.Controllers
 {
-    public class CategoryController(AppDbContext dbContext) : Controller
+    public class CategoryController(ICategoryRepository categoryRepository) : Controller
     {
         public IActionResult Index()
         {
-            var categories = dbContext.Categories.ToList();
+            var categories = categoryRepository.GetAll();
             return View(categories);
         }
 
@@ -22,8 +23,8 @@ namespace WormReads.Controllers
         {
             if(ModelState.IsValid)
             {
-                dbContext.Categories.Add(category);
-                dbContext.SaveChanges();
+                categoryRepository.Add(category);
+                categoryRepository.Save();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index");
             }
@@ -33,7 +34,7 @@ namespace WormReads.Controllers
 
         public IActionResult Edit(int id)
         {
-            var category = dbContext.Categories.FirstOrDefault(c => c.Id == id);
+            var category = categoryRepository.Get(c => c.Id == id);
             if (category == null)
             {
                 return NotFound();
@@ -45,8 +46,8 @@ namespace WormReads.Controllers
         {
             if (ModelState.IsValid)
             {
-                dbContext.Categories.Update(category);
-                dbContext.SaveChanges();
+                categoryRepository.Update(category);
+                categoryRepository.Save();
                 TempData["success"] = "Category updated successfully";
                 return RedirectToAction("Index");
             }
@@ -56,7 +57,7 @@ namespace WormReads.Controllers
 
         public IActionResult Delete(int id)
         {
-            var category = dbContext.Categories.FirstOrDefault(c => c.Id == id);
+            var category = categoryRepository.Get(c => c.Id == id);
             if (category == null)
             {
                 return NotFound();
@@ -66,13 +67,13 @@ namespace WormReads.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int id)
         {
-            var category = dbContext.Categories.FirstOrDefault(c => c.Id == id);
+            var category = categoryRepository.Get(c => c.Id == id);
             if (category == null)
             {
                 return NotFound();
             }
-            dbContext.Categories.Remove(category);
-            dbContext.SaveChanges();
+            categoryRepository.Remove(category);
+            categoryRepository.Save();
             TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
 

@@ -4,7 +4,7 @@ using WormReads.Data;
 
 namespace WormReads.DataAccess.Repository;
 
-internal class Repository<T>(AppDbContext dbContext) : IRepository<T> where T : class
+public class Repository<T>(AppDbContext dbContext) : IRepository<T> where T : class
 {
     private DbSet<T> _dbset = dbContext.Set<T>();
 
