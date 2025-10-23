@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WormReads.Data;
 using WormReads.DataAccess.Repository.Category_Repository;
+using WormReads.DataAccess.Repository.Product_Repository;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
 
 namespace WormReads
@@ -18,6 +19,7 @@ namespace WormReads
                 (o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();

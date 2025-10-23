@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata.Ecma335;
-using WormReads.Data;
-using WormReads.DataAccess.Repository.Category_Repository;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
 using WormReads.Models;
 

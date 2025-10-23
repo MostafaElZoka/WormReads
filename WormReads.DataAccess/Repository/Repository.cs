@@ -11,7 +11,6 @@ public class Repository<T>(AppDbContext dbContext) : IRepository<T> where T : cl
     public void Add(T entity)
     {
         _dbset.Add(entity);
-        dbContext.SaveChanges();
     }
 
     public T Get(Expression<Func<T, bool>> filter)
@@ -27,12 +26,10 @@ public class Repository<T>(AppDbContext dbContext) : IRepository<T> where T : cl
     public void Remove(T entity)
     {
         _dbset.Remove(entity);
-        dbContext.SaveChanges();
     }
 
     public void RemoveRange(IEnumerable<T> entities)
     {
         _dbset.RemoveRange(entities);
-        dbContext.SaveChanges();
     }
 }
