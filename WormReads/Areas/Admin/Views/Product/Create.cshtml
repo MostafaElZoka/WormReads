@@ -1,0 +1,74 @@
+﻿@model Product
+
+<div class="card shadow mt-4 border-0">
+    <div class="card-header bg-info bg-gradient py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2>Create Product</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form method="post">
+            <div class="border-0 p-4">
+                <div class="m-3">
+                    <label asp-for="Title" class="form-label mb-2 mt-4">Title</label>
+                    <input asp-for="Title" class="form-control mb-2" placeholder="Enter Title">
+                    <span class="text-danger"></span>
+                </div>
+                <div class="m-3">
+                    <label asp-for="Author" class="form-label mt-4 mb-2">Author</label>
+                    <input asp-for="Author" class="form-control mb-2" placeholder="Enter Author Name">
+                    <span class="text-danger" asp-validation-for="Author"></span>
+                </div>                
+                <div class="m-3">
+                    <label asp-for="Description" class="form-label mt-4 mb-2">Desciption</label>
+                    <textarea asp-for="Description" class="form-control mb-2" placeholder="Enter Description">
+                     </textarea>
+                </div>
+                <div class="m-3">
+                    <label asp-for="ISBN" class="form-label mt-4 mb-2">ISBN</label>
+                    <input asp-for="ISBN" class="form-control mb-2" placeholder="Enter ISBN">
+                    <span class="text-danger" asp-validation-for="ISBN"></span>
+                </div>
+                <div class="m-3">
+                    <label asp-for="Price" class="form-label mt-4 mb-2">Price</label>
+                    <input asp-for="Price" class="form-control mb-2" placeholder="Enter Price">
+                    <span class="text-danger" asp-validation-for="Price"></span>
+                </div>
+                <div class="m-3">
+                    <label asp-for="ListPrice" class="form-label mt-4 mb-2">List Price</label>
+                    <input asp-for="ListPrice" class="form-control mb-2" placeholder="Enter List Price">
+                    <span class="text-danger" asp-validation-for="ListPrice"></span>
+                </div>
+                <div class="m-3">
+                    <label asp-for="Price50" class="form-label mt-4 mb-2">Price 50</label>
+                    <input asp-for="Price50" class="form-control mb-2" placeholder="Enter Price for 50 units">
+                    <span class="text-danger" asp-validation-for="Price50"></span>
+                </div>
+                <div class="m-3">
+                    <label asp-for="Price100" class="form-label mt-4 mb-2">Price100</label>
+                    <input asp-for="Price100" class="form-control mb-2" placeholder="Enter Price for 100 units">
+                    <span class="text-danger" asp-validation-for="Price100"></span>
+                </div>
+
+                <div class="row d-flex justify-content-between mx-auto">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-primary form-control">Create</button>
+                    </div>
+                    <div class="col-6 col-md-3 text-start">
+                        <a asp-controller="Category" asp-action="Index" class="btn btn-outline-info form-control">Back To Products</a>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+@section scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+ }
