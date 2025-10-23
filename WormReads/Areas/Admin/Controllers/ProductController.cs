@@ -29,5 +29,47 @@ namespace WormReads.Areas.Admin.Controllers
             }
             return View(product);
         }
+
+        public IActionResult Edit(int id)
+        {
+            var product = unitOfWork._Product.Get(p => p.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+        [HttpPost, ActionName("Edit")]
+        public IActionResult EditPost(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork._Product.Update(product);
+                unitOfWork.Save();
+                TempData["success"] = "Product Update successfully";
+                return RedirectToAction("Index");
+            }
+            return View(product);
+        }
+
+       public IActionResult Delete(int id)
+        {
+            var product = unitOfWork._Product.Get(p => p.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+        [HttpPost]
+        public IActionResult Delete(Product product)
+        {
+
+                unitOfWork._Product.Remove(product);
+                unitOfWork.Save();
+                TempData["success"] = "Product Deleted successfully";
+                return RedirectToAction("Index");
+            
+        }
     }
 }
