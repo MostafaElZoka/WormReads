@@ -1,6 +1,6 @@
 ﻿@model Product
 
-<div class="card shadow mt-4 border-0">
+<div class="card shadow my-4 border-0">
     <div class="card-header bg-info bg-gradient py-3">
         <div class="row">
             <div class="col-12 text-center">
@@ -10,7 +10,7 @@
     </div>
     <div class="card-body p-4">
         <form method="post">
-            <div class="border-0 p-4">
+            <div class="border-0 ">
                 <div class="m-3">
                     <label asp-for="Title" class="form-label mb-2 mt-4">Title</label>
                     <input asp-for="Title" class="form-control mb-2" placeholder="Enter Title">
@@ -57,7 +57,7 @@
                         <button type="submit" class="btn btn-primary form-control">Edit</button>
                     </div>
                     <div class="col-6 col-md-3 text-start">
-                        <a asp-controller="Category" asp-action="Index" class="btn btn-outline-info form-control">Back To Products</a>
+                        <a asp-controller="Product" asp-action="Index" class="btn btn-outline-info form-control">Back To Products</a>
                     </div>
                 </div>
             </div>

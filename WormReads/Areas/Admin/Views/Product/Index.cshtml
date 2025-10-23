@@ -1,6 +1,6 @@
 ﻿@model List<Product>
 
-<div class="card shadow mt-4 border-0">
+<div class="card shadow my-4 border-0">
     <div class="card-header bg-info bg-gradient py-3">
         <div class="row">
             <div class="col-12 text-center">
@@ -19,27 +19,21 @@
                         <tr class="text-center">
                             <th>Title</th>
                             <th>Author</th>
-                            <th>Description</th>
                             <th>ISBN</th>
                             <th>Price</th>
-                            <th>List Price</th>
-                            <th>Price 50</th>
-                            <th>Price 100 </th>
+                            <th>Category</th>
                             <th>Actions </th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var product in Model.OrderBy(u => u.Price))
+                        @foreach (var product in Model)
                         {
                             <tr>
                                 <td class="text-center">@product.Title</td>
                                 <td class="text-center">@product.Author</td>
-                                <td class="text-center">@product.Description</td>
                                 <td class="text-center">@product.ISBN</td>
-                                <td class="text-center">@product.Price</td>
                                 <td class="text-center">@product.ListPrice</td>
-                                <td class="text-center">@product.Price50</td>
-                                <td class="text-center">@product.Price100</td>
+                                <td class="text-center">category</td>
                                 <td class="text-center">
                                     <div class="w-75 btn-group ">
                                         <a asp-action="edit" asp-route-id="@product.Id" class="btn btn-primary mx-2">

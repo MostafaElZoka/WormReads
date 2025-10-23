@@ -4,6 +4,7 @@ using WormReads.Models;
 
 namespace WormReads.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class ProductController(IUnitOfWork unitOfWork) : Controller
     {
         public IActionResult Index()
