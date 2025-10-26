@@ -9,87 +9,95 @@
         </div>
     </div>
     <div class="card-body p-4">
-        <form method="post" enctype="multipart/form-data">
-            <div class="border-0 ">
-                <div class="m-3">
-                    <label asp-for="product.Title" class="form-label mb-2 mt-4">Title</label>
-                    <input asp-for="product.Title" class="form-control mb-2" placeholder="Enter Title">
-                    <span class="text-danger" asp-validation-for="product.Title"></span>
-                </div>
-                <div class="m-3">
-                    <label asp-for="product.Author" class="form-label mt-4 mb-2">Author</label>
-                    <input asp-for="product.Author" class="form-control mb-2" placeholder="Enter Author Name">
-                    <span class="text-danger" asp-validation-for="product.Author"></span>
-                </div>                
-                <div class="m-3">
-                    <label asp-for="product.Description" class="form-label mt-4 mb-2">Desciption</label>
-                    <textarea asp-for="product.Description" class="form-control mb-2" placeholder="Enter Description">
+        <div class="row">
+            <div class="col-10">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="border-0 ">
+                        <div class="m-3">
+                            <label asp-for="product.Title" class="form-label mb-2 mt-4">Title</label>
+                            <input asp-for="product.Title" class="form-control mb-2" placeholder="Enter Title">
+                            <span class="text-danger" asp-validation-for="product.Title"></span>
+                        </div>
+                        <div class="m-3">
+                            <label asp-for="product.Author" class="form-label mt-4 mb-2">Author</label>
+                            <input asp-for="product.Author" class="form-control mb-2" placeholder="Enter Author Name">
+                            <span class="text-danger" asp-validation-for="product.Author"></span>
+                        </div>
+                        <div class="m-3">
+                            <label asp-for="product.Description" class="form-label mt-4 mb-2">Desciption</label>
+                            <textarea asp-for="product.Description" class="form-control mb-2" placeholder="Enter Description">
                     </textarea>
-                    <span class="text-danger" asp-validation-for="product.Description"></span>
+                            <span class="text-danger" asp-validation-for="product.Description"></span>
 
-                </div>
-                <div class="m-3">
-                    <label asp-for="product.CategoryId" class="form-label mt-4 mb-2">Category</label>
-                    <select asp-for="product.CategoryId" asp-items="@Model.Categories" class="form-select mb-2">
-                        <option value="">-- Select Category --</option>
-                    </select>
-                    <span class="text-danger" asp-validation-for="product.CategoryId"></span>
+                        </div>
+                        <div class="m-3">
+                            <label asp-for="product.CategoryId" class="form-label mt-4 mb-2">Category</label>
+                            <select asp-for="product.CategoryId" asp-items="@Model.Categories" class="form-select mb-2">
+                                <option value="">-- Select Category --</option>
+                            </select>
+                            <span class="text-danger" asp-validation-for="product.CategoryId"></span>
 
-                </div>
-                <div class="m-3">
-                    <label asp-for="product.ISBN" class="form-label mt-4 mb-2">ISBN</label>
-                    <input asp-for="product.ISBN" class="form-control mb-2" placeholder="Enter ISBN">
-                    <span class="text-danger" asp-validation-for="product.ISBN"></span>
-                </div>
-                <div class="m-3">
-                    <label  asp-for="product.ImageUrl" class="form-label mt-4 mb-2">Image</label>
-                    <input name="file" type="file" class="form-control mb-2" placeholder="Upload Image">
-                </div>
-                <div class="m-3">
-                    <label asp-for="product.Price" class="form-label mt-4 mb-2">Price</label>
-                    <input asp-for="product.Price" class="form-control mb-2" placeholder="Enter Price" />
-                    <span class="text-danger" asp-validation-for="product.Price"></span>
-                </div>
-
-                <div class="m-3">
-                    <label asp-for="product.ListPrice" class="form-label mt-4 mb-2">List Price</label>
-                    <input asp-for="product.ListPrice" class="form-control mb-2" placeholder="Enter List Price" />
-                    <span class="text-danger" asp-validation-for="product.ListPrice"></span>
-                </div>
-
-                <div class="m-3">
-                    <label asp-for="product.Price50" class="form-label mt-4 mb-2">Price 50</label>
-                    <input asp-for="product.Price50" class="form-control mb-2" placeholder="Enter Price for 50 units" />
-                    <span class="text-danger" asp-validation-for="product.Price50"></span>
-                </div>
-
-                <div class="m-3">
-                    <label asp-for="product.Price100" class="form-label mt-4 mb-2">Price 100</label>
-                    <input asp-for="product.Price100" class="form-control mb-2" placeholder="Enter Price for 100 units" />
-                    <span class="text-danger" asp-validation-for="product.Price100"></span>
-                </div>
-
-                <div class="row d-flex justify-content-between mx-auto">
-                    @if(Model.product.Id == 0)
-                    {
-                        <div class="col-6 col-md-3">
-                            <button type="submit" class="btn btn-primary form-control">Create</button>
+                        </div>
+                        <div class="m-3">
+                            <label asp-for="product.ISBN" class="form-label mt-4 mb-2">ISBN</label>
+                            <input asp-for="product.ISBN" class="form-control mb-2" placeholder="Enter ISBN">
+                            <span class="text-danger" asp-validation-for="product.ISBN"></span>
+                        </div>
+                        <div class="m-3">
+                            <label asp-for="product.ImageUrl" class="form-label mt-4 mb-2">Image</label>
+                            <input name="file" type="file" class="form-control mb-2" placeholder="Upload Image">
+                        </div>
+                        <div class="m-3">
+                            <label asp-for="product.Price" class="form-label mt-4 mb-2">Price</label>
+                            <input asp-for="product.Price" class="form-control mb-2" placeholder="Enter Price" />
+                            <span class="text-danger" asp-validation-for="product.Price"></span>
                         </div>
 
-                    }
-                    else
-                    {
-                        <div class="col-6 col-md-3">
-                            <button type="submit" class="btn btn-primary form-control">Update</button>
+                        <div class="m-3">
+                            <label asp-for="product.ListPrice" class="form-label mt-4 mb-2">List Price</label>
+                            <input asp-for="product.ListPrice" class="form-control mb-2" placeholder="Enter List Price" />
+                            <span class="text-danger" asp-validation-for="product.ListPrice"></span>
                         </div>
-                    }
-                    <div class="col-6 col-md-3 text-start">
-                        <a asp-controller="Product" asp-action="Index" class="btn btn-outline-info form-control">Back To Products</a>
+
+                        <div class="m-3">
+                            <label asp-for="product.Price50" class="form-label mt-4 mb-2">Price 50</label>
+                            <input asp-for="product.Price50" class="form-control mb-2" placeholder="Enter Price for 50 units" />
+                            <span class="text-danger" asp-validation-for="product.Price50"></span>
+                        </div>
+
+                        <div class="m-3">
+                            <label asp-for="product.Price100" class="form-label mt-4 mb-2">Price 100</label>
+                            <input asp-for="product.Price100" class="form-control mb-2" placeholder="Enter Price for 100 units" />
+                            <span class="text-danger" asp-validation-for="product.Price100"></span>
+                        </div>
+
+                        <div class="row d-flex justify-content-between mx-auto">
+                            @if (Model.product.Id == 0)
+                            {
+                                <div class="col-6 col-md-3">
+                                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="col-6 col-md-3">
+                                    <button type="submit" class="btn btn-primary form-control">Update</button>
+                                </div>
+                            }
+                            <div class="col-6 col-md-3 text-start">
+                                <a asp-controller="Product" asp-action="Index" class="btn btn-outline-info form-control">Back To Products</a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-        </form>
+                </form>
+
+            </div>
+            <div class="col-2">
+                 <img src=@Model.product.ImageUrl alt="Alternate Text" class="w-100" />
+             </div>
+        </div>
     </div>
 </div>
 
