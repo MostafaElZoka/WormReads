@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
 using WormReads.Models;
+using WormReads.Models.ViewModels;
 
 namespace WormReads.Areas.Admin.Controllers
 {
@@ -13,44 +15,66 @@ namespace WormReads.Areas.Admin.Controllers
             return View(products);
         }
 
-        public IActionResult Create()
+        public IActionResult Upsert(int? id)
         {
-            return View();
+            var productVM = new ProductVM();
+            var categoriesList = new SelectList(unitOfWork._Category.GetAll(), "Id", "Name");
+            if (id == null)
+            {
+                //ViewBag.Categories = categoriesList;
+                 productVM = new ProductVM
+                {
+                    Categories = categoriesList,
+                    product = new Product()
+                };
+            //return View(productVM);
+            }
+            else
+            {
+                productVM.product = unitOfWork._Product.Get(p => p.Id == id);
+                productVM.Categories = categoriesList;
+                if (productVM.product == null)
+                {
+                    return NotFound();
+                }
+            }
+                return View(productVM);
+
         }
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public IActionResult Upsert(ProductVM productVM)
         {
-            if(ModelState.IsValid)
-            {
-                unitOfWork._Product.Add(product);
-                unitOfWork.Save();
-                TempData["success"] = "Product created successfully";
-                return RedirectToAction("Index");
-            }
-            return View(product);
-        }
+            //ViewBag.Categories = categoriesList; //should be populated again in case invalid model state
 
-        public IActionResult Edit(int id)
-        {
-            var product = unitOfWork._Product.Get(p => p.Id == id);
-            if (product == null)
+            if (unitOfWork._Product.Get(u => u.Id == productVM.product.Id) == null)
             {
-                return NotFound();
+                if (ModelState.IsValid)
+                {
+                    unitOfWork._Product.Add(productVM.product);
+                    unitOfWork.Save();
+                    TempData["success"] = "Product created successfully";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    productVM.Categories = new SelectList(unitOfWork._Category.GetAll(), "Id", "Name");
+                    return View(productVM);
+
+                }
             }
-            return View(product);
-        }
-        [HttpPost, ActionName("Edit")]
-        public IActionResult EditPost(Product product)
-        {
-            if (ModelState.IsValid)
+            else
             {
-                unitOfWork._Product.Update(product);
-                unitOfWork.Save();
-                TempData["success"] = "Product Update successfully";
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    unitOfWork._Product.Update(productVM.product);
+                    unitOfWork.Save();
+                    TempData["success"] = "Product Update successfully";
+                    return RedirectToAction("Index");
+                }
+                productVM.Categories = new SelectList(unitOfWork._Category.GetAll(), "Id", "Name");
+                return View(productVM.product);
             }
-            return View(product);
         }
 
        public IActionResult Delete(int id)
