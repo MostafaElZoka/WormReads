@@ -7,7 +7,7 @@ using WormReads.Models.ViewModels;
 namespace WormReads.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ProductController(IUnitOfWork unitOfWork) : Controller
+    public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment) : Controller
     {
         public IActionResult Index()
         {
@@ -21,16 +21,16 @@ namespace WormReads.Areas.Admin.Controllers
             var categoriesList = new SelectList(unitOfWork._Category.GetAll(), "Id", "Name");
             if (id == null)
             {
-                //ViewBag.Categories = categoriesList;
+                //create
                  productVM = new ProductVM
                 {
                     Categories = categoriesList,
                     product = new Product()
                 };
-            //return View(productVM);
             }
             else
             {
+                //update
                 productVM.product = unitOfWork._Product.Get(p => p.Id == id);
                 productVM.Categories = categoriesList;
                 if (productVM.product == null)
@@ -43,7 +43,7 @@ namespace WormReads.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Upsert(ProductVM productVM)
+        public IActionResult Upsert(ProductVM productVM, IFormFile file)
         {
             //ViewBag.Categories = categoriesList; //should be populated again in case invalid model state
 
@@ -51,6 +51,18 @@ namespace WormReads.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if(file != null)
+                    {
+                        string wwwRootPath = webHostEnvironment.WebRootPath; //the path of wwwRoot folder
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); //to make unique name for image
+                        string productPath = Path.Combine(wwwRootPath, @"images\product");
+
+                        using(var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+                        productVM.product.ImageUrl = @"\images\product\" + fileName;
+                    }
                     unitOfWork._Product.Add(productVM.product);
                     unitOfWork.Save();
                     TempData["success"] = "Product created successfully";
