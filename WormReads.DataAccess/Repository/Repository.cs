@@ -13,14 +13,30 @@ public class Repository<T>(AppDbContext dbContext) : IRepository<T> where T : cl
         _dbset.Add(entity);
     }
 
-    public T Get(Expression<Func<T, bool>> filter)
+    public T Get(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes)
     {
-        return _dbset.FirstOrDefault(filter);
+        IQueryable<T> query = _dbset;
+        if (includes != null)
+        {
+            foreach (var includeProp in includes)
+            {
+                query = query.Include(includeProp);
+            }
+        }
+        return query.FirstOrDefault(filter);
     }
 
-    public IEnumerable<T> GetAll()
+    public IEnumerable<T> GetAll(params Expression<Func<T,object>>[] includes)
     {
-        return _dbset.ToList();
+        IQueryable<T> query = _dbset;
+        if (includes != null)
+        {
+            foreach(var includeProp in includes)
+            {
+                query = query.Include(includeProp);
+            }
+        }
+        return query.ToList();
     }
 
     public void Remove(T entity)

@@ -11,7 +11,7 @@ namespace WormReads.Areas.Admin.Controllers
     {
         public IActionResult Index()
         {
-            var products = unitOfWork._Product.GetAll();
+            var products = unitOfWork._Product.GetAll(p => p.Category);
             return View(products);
         }
 

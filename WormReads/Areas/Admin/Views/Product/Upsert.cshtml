@@ -12,6 +12,8 @@
         <div class="row">
             <div class="col-10">
                 <form method="post" enctype="multipart/form-data">
+                     <input type="hidden" asp-for="product.Id" />
+                     <input type="hidden" asp-for="product.ImageUrl" />
                     <div class="border-0 ">
                         <div class="m-3">
                             <label asp-for="product.Title" class="form-label mb-2 mt-4">Title</label>
