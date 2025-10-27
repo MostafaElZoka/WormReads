@@ -1,22 +1,18 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using WormReads.DataAccess.Repository.Unit_Of_Work;
 using WormReads.Models;
 
 namespace WormReads.Areas.Customer.Controllers
 {
     [Area("Customer")]
-    public class HomeController : Controller
+    public class HomeController(IUnitOfWork unitOfWork ) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
 
         public IActionResult Index()
         {
-            return View();
+            var products = unitOfWork._Product.GetAll(p => p.Category);
+            return View(products);
         }
 
         public IActionResult Privacy()
