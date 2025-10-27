@@ -7,7 +7,7 @@
             <div class="col-3">
                 <div class="row p-2">
                     <div class="col-12">
-                        <div class="card shadow border-0 p-3 border-5 rounded">
+                        <div class="card shadow border-0 p-3 border-top border-5 rounded">
                             <img src="@product.ImageUrl" class="card-img-top rounded" />
                             <div class="card-body">
                                 <div class="text-center">
@@ -20,9 +20,9 @@
                                 </div>
                             </div>
                             <div>
-                                <button class="btn btn-primary form-control">
+                                <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary form-control">
                                     Details
-                                </button>
+                                </a>
                             </div>
                         </div>
 

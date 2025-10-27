@@ -13,6 +13,11 @@ namespace WormReads.Areas.Customer.Controllers
         {
             var products = unitOfWork._Product.GetAll(p => p.Category);
             return View(products);
+        }        
+        public IActionResult Details(int id)
+        {
+            var product = unitOfWork._Product.Get(p => p.Id == id,p => p.Category);
+            return View(product);
         }
 
         public IActionResult Privacy()
