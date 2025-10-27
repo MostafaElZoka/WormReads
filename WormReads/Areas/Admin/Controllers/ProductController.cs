@@ -92,24 +92,54 @@ namespace WormReads.Areas.Admin.Controllers
         }
 
 
-        public IActionResult Delete(int id)
+        //public IActionResult Delete(int id)
+        //{
+        //    var product = unitOfWork._Product.Get(p => p.Id == id);
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(product);
+        //}
+        //[HttpPost]
+        //public IActionResult Delete(Product product)
+        //{
+
+        //        unitOfWork._Product.Remove(product);
+        //        unitOfWork.Save();
+        //        TempData["success"] = "Product Deleted successfully";
+        //        return RedirectToAction("Index");
+            
+        //}
+
+        #region API CALLS
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var products = unitOfWork._Product.GetAll(p => p.Category);
+            return Json(new { data = products });
+        }
+
+        public IActionResult Delete(int? id)
         {
             var product = unitOfWork._Product.Get(p => p.Id == id);
             if (product == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "error in deleting product" });
             }
-            return View(product);
-        }
-        [HttpPost]
-        public IActionResult Delete(Product product)
-        {
+            string wwwRootPath = webHostEnvironment.WebRootPath;
+            if(product.ImageUrl != null)
+            {
+                string oldImagePath = Path.Combine(wwwRootPath, product.ImageUrl.TrimStart('\\'));
 
-                unitOfWork._Product.Remove(product);
-                unitOfWork.Save();
-                TempData["success"] = "Product Deleted successfully";
-                return RedirectToAction("Index");
-            
+                if (System.IO.File.Exists(oldImagePath))
+                    System.IO.File.Delete(oldImagePath);
+            }
+
+            unitOfWork._Product.Remove(product);
+            unitOfWork.Save();
+            return Json(new { success = true, message = "product deleted successfully" });
         }
+        #endregion
     }
 }
