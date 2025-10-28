@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using WormReads.Application;
+using WormReads.Models;
 
 namespace WormReads.Areas.Identity.Pages.Account
 {
@@ -25,6 +27,7 @@ namespace WormReads.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
@@ -35,6 +38,7 @@ namespace WormReads.Areas.Identity.Pages.Account
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
+            RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -43,6 +47,7 @@ namespace WormReads.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -102,6 +107,13 @@ namespace WormReads.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if(!await _roleManager.RoleExistsAsync(StaticDetails.Customer))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Customer));
+                await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Admin));
+                await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Company));
+                await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Employee));
+            }
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -154,11 +166,11 @@ namespace WormReads.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private User CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<User>();
             }
             catch
             {

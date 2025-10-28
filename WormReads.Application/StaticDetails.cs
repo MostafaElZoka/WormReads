@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace WormReads.Application
 {
-    internal class StaticDetails
+    public static class StaticDetails
     {
+        public const string Customer = "Customer";
+        public const string Company = "Company";
+        public const string Admin = "Admin";
+        public const string Employee = "Employee";
     }
 }

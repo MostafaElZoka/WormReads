@@ -4,6 +4,8 @@ using WormReads.DataAccess.Repository.Category_Repository;
 using WormReads.DataAccess.Repository.Product_Repository;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
 using Microsoft.AspNetCore.Identity;
+using WormReads.Application;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace WormReads
 {
@@ -19,13 +21,14 @@ namespace WormReads
             builder.Services.AddDbContext<AppDbContext>
                 (o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<AppDbContext>();
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
             builder.Services.AddRazorPages();//for identity to work
 
             builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
 
             var app = builder.Build();
 

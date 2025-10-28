@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WormReads.Application\WormReads.Application.csproj" />
     <ProjectReference Include="..\WormReads.DataAccess\WormReads.DataAccess.csproj" />
     <ProjectReference Include="..\WormReads.Models\WormReads.Models.csproj" />
   </ItemGroup>
