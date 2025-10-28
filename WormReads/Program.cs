@@ -3,6 +3,7 @@ using WormReads.Data;
 using WormReads.DataAccess.Repository.Category_Repository;
 using WormReads.DataAccess.Repository.Product_Repository;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
+using Microsoft.AspNetCore.Identity;
 
 namespace WormReads
 {
@@ -17,6 +18,8 @@ namespace WormReads
 
             builder.Services.AddDbContext<AppDbContext>
                 (o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<AppDbContext>();
 
             builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
