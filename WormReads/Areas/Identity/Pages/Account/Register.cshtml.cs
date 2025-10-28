@@ -16,7 +16,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using WormReads.Application;
 using WormReads.Models;
@@ -27,7 +29,7 @@ namespace WormReads.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager; //to manage roles
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
@@ -102,18 +104,27 @@ namespace WormReads.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            [Required(ErrorMessage ="Please Select a Role")]
+            public string Role {  get; set; } //adding role property to input
+            public SelectList RolesList { get; set; } //adding Select list of available roles, in order to display it to user
         }
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if(!await _roleManager.RoleExistsAsync(StaticDetails.Customer))
+            //seeding roles in DB
+            if(!await _roleManager.RoleExistsAsync(StaticDetails.Customer)) //add the roles if they do not exist once the register page is accessed
             {
                 await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Customer));
                 await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Admin));
                 await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Company));
                 await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Employee));
             }
+            //populating roles
+            Input = new InputModel()
+            {
+                RolesList =  new SelectList(_roleManager.Roles.Select(r => r.Name))
+            };
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -133,6 +144,14 @@ namespace WormReads.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    //assiginig role
+                    if(Input.Role != null && Input.Role != "")
+                    {
+                        await _userManager.AddToRoleAsync(user, Input.Role);
+                    }
+                    //else
+                    //    await _userManager.AddToRoleAsync(user, StaticDetails.Customer); //if no role selected then u r customer by default
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

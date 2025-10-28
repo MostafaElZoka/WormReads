@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using WormReads.Application;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
 using WormReads.Models;
 using WormReads.Models.ViewModels;
@@ -7,6 +9,7 @@ using WormReads.Models.ViewModels;
 namespace WormReads.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles =StaticDetails.Admin)]
     public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment) : Controller
     {
         public IActionResult Index()
