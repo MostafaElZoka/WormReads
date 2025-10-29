@@ -23,7 +23,7 @@ namespace WormReads
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>().
                 AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders();//because AddIdentity doesnt add token providers such as for email confirmation
 
             builder.Services.ConfigureApplicationCookie(options => //configure login path because we are using areas
             {
@@ -37,7 +37,7 @@ namespace WormReads
             builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<IEmailSender, EmailSender>();
+            builder.Services.AddScoped<IEmailSender, EmailSender>(); //registered fake email sender to override default one which throws exception
 
             var app = builder.Build();
 
