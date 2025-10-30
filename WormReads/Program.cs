@@ -6,6 +6,7 @@ using WormReads.DataAccess.Repository.Unit_Of_Work;
 using Microsoft.AspNetCore.Identity;
 using WormReads.Application;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using WormReads.DataAccess.Repository.Company_Repository;
 
 namespace WormReads
 {
@@ -36,6 +37,7 @@ namespace WormReads
 
             builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IEmailSender, EmailSender>(); //registered fake email sender to override default one which throws exception
 
