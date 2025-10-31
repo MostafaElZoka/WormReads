@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using WormReads.Application;
+using WormReads.DataAccess.Repository.Unit_Of_Work;
 using WormReads.Models;
 
 namespace WormReads.Areas.Identity.Pages.Account
@@ -34,6 +35,7 @@ namespace WormReads.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -41,7 +43,8 @@ namespace WormReads.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             RoleManager<IdentityRole> roleManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,6 +53,7 @@ namespace WormReads.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -114,6 +118,8 @@ namespace WormReads.Areas.Identity.Pages.Account
             public string? State { get; set; }
             public string? PostalCode { get; set; }
             public string? PhoneNumber { get; set; }
+            public string? Company { get; set; }
+            public SelectList CompanyList { get; set; }
         }
 
 
@@ -132,8 +138,16 @@ namespace WormReads.Areas.Identity.Pages.Account
             {
                 RolesList =  new SelectList(_roleManager.Roles.Select(r => r.Name))
             };
+
+            //populating companies
+            Input = new InputModel()
+            {
+                CompanyList = new SelectList(_unitOfWork._Company.GetAll(),"Name", "Id")
+            };
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

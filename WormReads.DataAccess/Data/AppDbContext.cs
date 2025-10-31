@@ -23,7 +23,38 @@ namespace WormReads.Data
                 new Category { Id = 2, Name = "SciFi", DisplayOrder = 2 },
                 new Category { Id = 3, Name = "History", DisplayOrder = 3 }
             );
-
+            modelBuilder.Entity<Company>().HasData(
+                new Company
+                {
+                    Id = 1,
+                    Name = "Tech Solutions",
+                    StreetAddress = "123 Tech Lane",
+                    City = "Innovation City",
+                    State = "CA",
+                    PostalCode = "90001",
+                    PhoneNumber = "555-1234"
+                },
+                new Company
+                {
+                    Id = 2,
+                    Name = "Business Corp",
+                    StreetAddress = "456 Business Rd",
+                    City = "Commerce Town",
+                    State = "NY",
+                    PostalCode = "10001",
+                    PhoneNumber = "555-5678"
+                },
+                new Company
+                {
+                    Id = 3,
+                    Name = "Enterprise Inc",
+                    StreetAddress = "789 Enterprise Ave",
+                    City = "Enterprise City",
+                    State = "TX",
+                    PostalCode = "75001",
+                    PhoneNumber = "555-9012"
+                }
+            );
             modelBuilder.Entity<Product>().HasData(
                 new Product
                 {

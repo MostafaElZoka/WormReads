@@ -69,8 +69,13 @@
                         <input asp-for="Input.PostalCode" class="form-control"/>
                         <label asp-for="Input.PostalCode" class="ms-2 text-muted">Postal Code</label>
                         <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
-                    </div>                  
-
+                    </div>
+                    <div class="form-floating mb-3 col-md-6">
+                        <select asp-for="Input.Company" asp-items="@Model.Input.CompanyList" class="form-select">
+                            <option disabled selected>-Select Company-*</option>
+                        </select>
+                        <span asp-validation-for="Input.Company" class="text-danger"></span>
+                    </div>
                     <div class="col-12">
                         <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
                     </div>

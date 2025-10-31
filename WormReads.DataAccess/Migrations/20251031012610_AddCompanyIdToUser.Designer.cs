@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WormReads.Data;
 
@@ -11,9 +12,11 @@ using WormReads.Data;
 namespace WormReads.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251031012610_AddCompanyIdToUser")]
+    partial class AddCompanyIdToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -299,38 +302,6 @@ namespace WormReads.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "Innovation City",
-                            Name = "Tech Solutions",
-                            PhoneNumber = "555-1234",
-                            PostalCode = "90001",
-                            State = "CA",
-                            StreetAddress = "123 Tech Lane"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            City = "Commerce Town",
-                            Name = "Business Corp",
-                            PhoneNumber = "555-5678",
-                            PostalCode = "10001",
-                            State = "NY",
-                            StreetAddress = "456 Business Rd"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            City = "Enterprise City",
-                            Name = "Enterprise Inc",
-                            PhoneNumber = "555-9012",
-                            PostalCode = "75001",
-                            State = "TX",
-                            StreetAddress = "789 Enterprise Ave"
-                        });
                 });
 
             modelBuilder.Entity("WormReads.Models.Product", b =>
