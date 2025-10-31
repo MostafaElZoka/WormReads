@@ -133,17 +133,15 @@ namespace WormReads.Areas.Identity.Pages.Account
                 await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Company));
                 await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Employee));
             }
-            //populating roles
+            //populating roles and company select lists
             Input = new InputModel()
             {
-                RolesList =  new SelectList(_roleManager.Roles.Select(r => r.Name))
+                RolesList =  new SelectList(_roleManager.Roles.Select(r => r.Name)),
+                CompanyList = new SelectList(_unitOfWork._Company.GetAll(),"Id","Name")
+
             };
 
-            //populating companies
-            Input = new InputModel()
-            {
-                CompanyList = new SelectList(_unitOfWork._Company.GetAll(),"Name", "Id")
-            };
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
