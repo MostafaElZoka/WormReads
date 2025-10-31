@@ -4,7 +4,7 @@
 
 function loadTable() {
     $('#myTable').DataTable({
-        ajax: '/company/company/getall',
+        ajax: '/admin/company/getall',
         columns: [
             { data: 'name', "width": "10%" },
             { data: 'state', "width": "10%" },
@@ -19,10 +19,10 @@ function loadTable() {
                     
                                     <div class="d-flex justify-content-center">    
                                      <div class="w-75 btn-group text-center">
-                                        <a href="/company/company/upsert/${data}" class="btn btn-primary mx-2">
+                                        <a href="/admin/company/upsert/${data}" class="btn btn-primary mx-2">
                                             <i class="bi bi-pencil"></i> Edit
                                         </a>
-                                        <a onClick=Delete("/company/company/delete/${data}") class="btn btn-secondary">
+                                        <a onClick=Delete("/admin/company/delete/${data}") class="btn btn-secondary">
                                             <i class="bi bi-trash3"></i> Delete
                                         </a>
                                     </div>

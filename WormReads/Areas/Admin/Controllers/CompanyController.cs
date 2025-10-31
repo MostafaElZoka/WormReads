@@ -2,9 +2,9 @@
 using WormReads.DataAccess.Repository.Unit_Of_Work;
 using WormReads.Models;
 
-namespace WormReads.Areas.Company.Controllers
+namespace WormReads.Areas.Admin.Controllers
 {
-    [Area("Company")]
+    [Area("Admin")]
     public class CompanyController(IUnitOfWork unitOfWork) : Controller
     {
         public IActionResult Index()
@@ -15,7 +15,7 @@ namespace WormReads.Areas.Company.Controllers
 
         public IActionResult Upsert(int? id)
         {
-            var company = new WormReads.Models.Company();
+            var company = new Company();
             if (id == null)
             {
                 return View(company);
@@ -32,7 +32,7 @@ namespace WormReads.Areas.Company.Controllers
         }
 
         [HttpPost]
-        public IActionResult Upsert(Models.Company company)
+        public IActionResult Upsert(Company company)
         {
             if (ModelState.IsValid)
             {
