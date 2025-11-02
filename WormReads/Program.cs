@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using WormReads.Application;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using WormReads.DataAccess.Repository.Company_Repository;
+using WormReads.DataAccess.Repository.Shopping_Cart_Repository;
+using WormReads.DataAccess.Repository.User_Rpository;
 
 namespace WormReads
 {
@@ -39,6 +41,8 @@ namespace WormReads
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+            builder.Services.AddScoped<IUserRpository, UserRepository>();
             builder.Services.AddScoped<IEmailSender, EmailSender>(); //registered fake email sender to override default one which throws exception
 
             var app = builder.Build();
