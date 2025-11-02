@@ -118,7 +118,7 @@ namespace WormReads.Areas.Identity.Pages.Account
             public string? State { get; set; }
             public string? PostalCode { get; set; }
             public string? PhoneNumber { get; set; }
-            public string? Company { get; set; }
+            public int? CompanyId { get; set; }
             public SelectList CompanyList { get; set; }
         }
 
@@ -165,7 +165,12 @@ namespace WormReads.Areas.Identity.Pages.Account
                 user.PostalCode = Input.PostalCode;
                 user.StreetAddress = Input.StreetAddress;
                 user.PhoneNumber = Input.PhoneNumber;
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                if(Input.Role == "Company")
+                {
+                    user.CompanyId = Input.CompanyId;
+                }
+
+                var result = await _userManager.CreateAsync(user, Input.Password); //create user
 
                 if (result.Succeeded)
                 {

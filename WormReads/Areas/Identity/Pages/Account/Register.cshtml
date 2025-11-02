@@ -71,10 +71,10 @@
                         <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3 col-md-6">
-                        <select hidden id="companyList" asp-for="Input.Company" asp-items="@Model.Input.CompanyList" class="form-select">
+                        <select hidden id="companyList" asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select">
                             <option disabled selected>-Select Company-</option>
                         </select>
-                        <span asp-validation-for="Input.Company" class="text-danger"></span>
+                        <span asp-validation-for="Input.CompanyId" class="text-danger"></span>
                     </div>
                     <div class="col-12">
                         <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
