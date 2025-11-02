@@ -2,6 +2,7 @@
 using WormReads.DataAccess.Repository.Company_Repository;
 using WormReads.DataAccess.Repository.Product_Repository;
 using WormReads.DataAccess.Repository.Shopping_Cart_Repository;
+using WormReads.DataAccess.Repository.User_Rpository;
 
 namespace WormReads.DataAccess.Repository.Unit_Of_Work;
 
@@ -11,5 +12,6 @@ public interface IUnitOfWork
     public IProductRepository _Product { get; }
     public ICompanyRepository _Company { get; }
     public IShoppingCartRepository _ShoppingCart { get; }
+    public IUserRpository _User { get; }
     public void Save();
 }
