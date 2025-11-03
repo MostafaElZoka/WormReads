@@ -22,5 +22,7 @@ namespace WormReads.Models
         [ForeignKey("ProductId")]
         [ValidateNever]
         public Product Product { get; set; }
+        [NotMapped] //won't be added to the database table just for UI display purposes
+        public double Price { get; set; }
     }
 }

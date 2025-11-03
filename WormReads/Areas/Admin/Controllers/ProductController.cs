@@ -14,7 +14,7 @@ namespace WormReads.Areas.Admin.Controllers
     {
         public IActionResult Index()
         {
-            var products = unitOfWork._Product.GetAll(p => p.Category);
+            var products = unitOfWork._Product.GetAll(includes: p => p.Category);
             return View(products);
         }
 
@@ -119,7 +119,7 @@ namespace WormReads.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var products = unitOfWork._Product.GetAll(p => p.Category);
+            var products = unitOfWork._Product.GetAll(includes: p => p.Category);
             return Json(new { data = products });
         }
 

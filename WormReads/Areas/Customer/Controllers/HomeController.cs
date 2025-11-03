@@ -13,7 +13,7 @@ namespace WormReads.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            var products = unitOfWork._Product.GetAll(p => p.Category);
+            var products = unitOfWork._Product.GetAll(includes: p => p.Category);
             return View(products);
         }        
         public IActionResult Details(int productId)

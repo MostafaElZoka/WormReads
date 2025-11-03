@@ -35,7 +35,7 @@ public class Repository<T>(AppDbContext dbContext) : IRepository<T> where T : cl
         return query.FirstOrDefault(filter);
     }
 
-    public IEnumerable<T> GetAll(params Expression<Func<T,object>>[] includes)
+    public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, params Expression<Func<T,object>>[] includes)
     {
         IQueryable<T> query = _dbset;
         if (includes != null)
@@ -45,6 +45,9 @@ public class Repository<T>(AppDbContext dbContext) : IRepository<T> where T : cl
                 query = query.Include(includeProp);
             }
         }
+        if (filter != null)
+            query = query.Where(filter);
+
         return query.ToList();
     }
 
