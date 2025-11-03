@@ -17,12 +17,13 @@ namespace WormReads.Areas.Customer.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             var shoppingCart = new ShoppingCartVM
             {
-                ShoppingCartItems = unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId, includes: c=>c.Product)
+                ShoppingCartItems = unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId, includes: c=>c.Product),
+                OrderHeader = new()
             };
             foreach(var item in shoppingCart.ShoppingCartItems)
             {
                  item.Price = GetOrderTotal(item);
-                shoppingCart.OrderTotal += (item.Price * item.Count);
+                shoppingCart.OrderHeader.OrderTotal += (item.Price * item.Count);
             }
             return View(shoppingCart);
         }
