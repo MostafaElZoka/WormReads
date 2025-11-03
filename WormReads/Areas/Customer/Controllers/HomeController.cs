@@ -20,7 +20,7 @@ namespace WormReads.Areas.Customer.Controllers
         {
             var shoppingCart = new ShoppingCart()
             {
-                Product = unitOfWork._Product.Get(p => p.Id == productId, p => p.Category),
+                Product = unitOfWork._Product.Get(p => p.Id == productId,includes: p => p.Category),
                 ProductId = productId,
                 Count = 1
             };
@@ -38,13 +38,14 @@ namespace WormReads.Areas.Customer.Controllers
             if(cartFromDb != null) ///cart item already exists in DB for the same user
             {
                 cartFromDb.Count += cart.Count;
-                unitOfWork._ShoppingCart.Update(cartFromDb);
+                //unitOfWork._ShoppingCart.Update(cartFromDb);
             }
             else //new cart item for the user
             {
                 unitOfWork._ShoppingCart.Add(cart);
             }
             unitOfWork.Save();
+            TempData["success"] = "Item Added To Cart Successfully";
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Privacy()

@@ -13,9 +13,18 @@ public class Repository<T>(AppDbContext dbContext) : IRepository<T> where T : cl
         _dbset.Add(entity);
     }
 
-    public T Get(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes)
+    public T Get(Expression<Func<T, bool>> filter,bool tracked = false, params Expression<Func<T, object>>[] includes)
     {
-        IQueryable<T> query = _dbset;
+        IQueryable<T> query;
+        if(tracked)
+        {
+            query = _dbset;
+        }
+        else
+        {
+            query = _dbset.AsNoTracking();
+        }
+
         if (includes != null)
         {
             foreach (var includeProp in includes)
