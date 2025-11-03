@@ -40,6 +40,7 @@ namespace WormReads.Areas.Customer.Controllers
         }
         public IActionResult Summary ()
         {
+
             return View();
         }
         public IActionResult plus(int id)
