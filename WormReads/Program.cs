@@ -12,6 +12,7 @@ using WormReads.DataAccess.Repository.User_Rpository;
 using WormReads.DataAccess.Repository.Order_Header_Repository;
 using WormReads.Models;
 using WormReads.DataAccess.Repository.Order_Details_Repository;
+using Stripe;
 
 namespace WormReads
 {
@@ -50,6 +51,9 @@ namespace WormReads
             builder.Services.AddScoped<IOrderDetailsRepository,OrderDetailsRepository>();
             builder.Services.AddScoped<IEmailSender, EmailSender>(); //registered fake email sender to override default one which throws exception
 
+
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe")); //mapping stripe section into stripe class
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -68,7 +72,10 @@ namespace WormReads
 
             app.MapStaticAssets();
 
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();//configuring stripe 
+
             app.MapRazorPages(); //for identity to work
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}")
