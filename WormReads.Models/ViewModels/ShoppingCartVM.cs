@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace WormReads.Models.ViewModels
 {
     public class ShoppingCartVM
     {
+        [ValidateNever]
         public IEnumerable<ShoppingCart> ShoppingCartItems { get; set; }
         public OrderHeader OrderHeader { get; set; }
     }

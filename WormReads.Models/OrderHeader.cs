@@ -8,7 +8,7 @@ namespace WormReads.Models
     {
         public int Id { get; set; }
 
-
+        [ValidateNever]
         public string UserId { get; set; }
         [ForeignKey("UserId")]
         [ValidateNever]

@@ -11,7 +11,7 @@ namespace WormReads.Models
 
         [Required]
         public int OrderHeaderId { get; set; }
-        [ForeignKey("OrderId")]
+        [ForeignKey("OrderHeaderId")]
         [ValidateNever]
         public OrderHeader OrderHeader { get; set; }
 

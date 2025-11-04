@@ -70,11 +70,12 @@ namespace WormReads.Areas.Customer.Controllers
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.OrderHeader.UserId = userId;
 
-            shoppingCart.ShoppingCartItems = unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId, includes: c => c.Product);
-            
             if(!ModelState.IsValid) //if there is validation errors then we need to repopulate the order total price
-            { 
+            {
+                shoppingCart.ShoppingCartItems = unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId, includes: c => c.Product);
+
                 foreach (var item in shoppingCart.ShoppingCartItems)
                 {
                     item.Price = GetOrderTotal(item);
@@ -82,7 +83,10 @@ namespace WormReads.Areas.Customer.Controllers
                 }
                 return View(shoppingCart);
             }
-            shoppingCart.OrderHeader.User = unitOfWork._User.Get(u => u.Id == userId);//populate the user navigational prop we will need it to verify if the user is a company or not
+
+            shoppingCart.ShoppingCartItems = unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId, includes: c => c.Product);
+            
+            User user = unitOfWork._User.Get(u => u.Id == userId);//populate the user navigational prop we will need it to verify if the user is a company or not
             shoppingCart.OrderHeader.UserId = userId;
             shoppingCart.OrderHeader.OrderDate = DateTime.Now;
 
@@ -92,7 +96,7 @@ namespace WormReads.Areas.Customer.Controllers
                 shoppingCart.OrderHeader.OrderTotal += (item.Price * item.Count);
             }
 
-            if(shoppingCart.OrderHeader.User.CompanyId.GetValueOrDefault() == 0) //this means the user is a regular customer and not a company
+            if(user.CompanyId.GetValueOrDefault() == 0) //this means the user is a regular customer and not a company
             {
                 shoppingCart.OrderHeader.OrderStatus = StaticDetails.PaymentStatusPending;
                 shoppingCart.OrderHeader.PaymentStatus = StaticDetails.PaymentStatusPending;
@@ -118,7 +122,12 @@ namespace WormReads.Areas.Customer.Controllers
             }
 
             unitOfWork.Save();
-            return RedirectToAction();
+            return RedirectToAction(nameof(OrderConfirmation), new { id = shoppingCart.OrderHeader.Id});
+        }
+        public IActionResult OrderConfirmation(int id)
+        {
+            var orderId = id;
+            return View(orderId);
         }
         public IActionResult plus(int id)
         {
