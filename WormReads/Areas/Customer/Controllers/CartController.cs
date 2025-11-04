@@ -41,8 +41,28 @@ namespace WormReads.Areas.Customer.Controllers
         }
         public IActionResult Summary ()
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var shoppingCart = new ShoppingCartVM
+            {
+                ShoppingCartItems = unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId, includes: c => c.Product),
+                OrderHeader = new()
+            };
+            shoppingCart.OrderHeader.User = unitOfWork._User.Get(u => u.Id == userId);//populate the user navigational prop
 
-            return View();
+            shoppingCart.OrderHeader.City = shoppingCart.OrderHeader.User.City;
+            shoppingCart.OrderHeader.PostalCode = shoppingCart.OrderHeader.User.PostalCode;
+            shoppingCart.OrderHeader.StreetAddress = shoppingCart.OrderHeader.User.StreetAddress;
+            shoppingCart.OrderHeader.State = shoppingCart.OrderHeader.User.State;
+            shoppingCart.OrderHeader.PhoneNumber = shoppingCart.OrderHeader.User.PhoneNumber;
+            shoppingCart.OrderHeader.Name = shoppingCart.OrderHeader.User.Name;
+
+            foreach (var item in shoppingCart.ShoppingCartItems)
+            {
+                item.Price = GetOrderTotal(item);
+                shoppingCart.OrderHeader.OrderTotal += (item.Price * item.Count);
+            }
+            return View(shoppingCart);
         }
         public IActionResult plus(int id)
         {
