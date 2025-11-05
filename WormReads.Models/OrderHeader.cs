@@ -29,6 +29,7 @@ namespace WormReads.Models
         public DateTime PaymentDate { get; set; }//for companies because they have 30 days to pay
         public DateOnly PaymentDueDate { get; set; }
 
+        public string? SessionId { get; set; } //the session Id from Stripe
         public string? PaymentIntentId { get; set; }//the ID that will be returned from the stripe service
 
 
