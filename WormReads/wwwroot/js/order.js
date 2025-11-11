@@ -1,10 +1,25 @@
-﻿$(document).ready(function () {
+﻿    let ajaxUrl = '/Admin/Order/GetAll'
+$(document).ready(function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get("status");
+
+    if (status) {
+        ajaxUrl += `?status=${status}`
+    }
+    var list = document.querySelectorAll('#a7a .list-group-item');
+
+    //list.forEach(item => {
+    //    item.addEventListener('click', function () {
+    //        list.forEach(li => li.classList.remove('active'));
+    //        this.classList.add('active');
+    //    });
+    //});
+
     loadDataTable();
 });
-
 function loadDataTable() {
     $('#myTable').DataTable({
-        ajax: '/Admin/Order/GetAll',
+        ajax: ajaxUrl,
         columns: [
             { data: 'id', "width": "10px" },
             { data: 'name', "width": "10px" },

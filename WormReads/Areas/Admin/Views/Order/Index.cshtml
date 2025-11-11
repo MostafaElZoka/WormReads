@@ -1,4 +1,7 @@
-﻿
+﻿@using WormReads.Application
+@{
+    var status = Context.Request.Query["status"].ToString();//fetching the status from the request
+}
 <div class="card shadow my-4 border-0">
     <div class="card-header bg-info bg-gradient py-3">
         <div class="row">
@@ -6,9 +9,48 @@
                 <h2>Orders</h2>
             </div>
         </div>
-    </div>
+    </div> 
     <div class="card-body p-4">
         <div class="">
+            <div class="d-flex justify-content-between px-3">
+                <ul class="list-group list-group-horizontal">
+                    <a asp-action="Index"
+                       class="list-group-item list-group-item-action @(status == "" ? "active" : "")"
+                       style="text-decoration:none">
+                        All
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-status="@WormReads.Application.StaticDetails.StatusInProcess"
+                       class="list-group-item list-group-item-action @(status == StaticDetails.StatusInProcess ? "active" : "")"
+                       style="text-decoration:none">
+                        In Process
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-status="@WormReads.Application.StaticDetails.PaymentStatusPending"
+                       class="list-group-item list-group-item-action @(status == StaticDetails.PaymentStatusPending ? "active" : "")"
+                       style="text-decoration:none">
+                        Payment Pending
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-status="@WormReads.Application.StaticDetails.StatusShipped"
+                       class="list-group-item list-group-item-action @(status == StaticDetails.StatusShipped ? "active" : "")"
+                       style="text-decoration:none">
+                        Shipped
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-status="@WormReads.Application.StaticDetails.StatusApproved"
+                       class="list-group-item list-group-item-action @(status == StaticDetails.StatusApproved ? "active" : "")"
+                       style="text-decoration:none">
+                        Approved
+                    </a>
+                </ul>
+
+            </div>
+
             <div class="row">
                 <table id="myTable" class="table table-bordered table-striped table-hover mt-3">
                     <thead class="text-center">
