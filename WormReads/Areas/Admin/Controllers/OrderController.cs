@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
+using WormReads.Models.ViewModels;
 
 namespace WormReads.Areas.Admin.Controllers
 {
@@ -9,6 +10,15 @@ namespace WormReads.Areas.Admin.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+        public IActionResult Details(int id)
+        {
+            OrderVM orderVM = new OrderVM()
+            {
+                OrderHeader = unitOfWork._OrderHeader.Get(o => o.Id == id, includes: o => o.User),
+                OrderDetails = unitOfWork._OrderDetails.GetAll(o => o.OrderHeaderId == id, includes: o => o.Product)
+            };
+            return View(orderVM);
         }
 
 
