@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using WormReads.Application;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
+using WormReads.Models;
 using WormReads.Models.ViewModels;
 
 namespace WormReads.Areas.Admin.Controllers
@@ -41,6 +44,7 @@ namespace WormReads.Areas.Admin.Controllers
             }
             unitOfWork._OrderHeader.Update(orderHeaderFromDb);
             unitOfWork.Save();
+            TempData["success"] = "Order was updated successfully";
             return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id });
         }
         
@@ -48,11 +52,28 @@ namespace WormReads.Areas.Admin.Controllers
         #region API
         public IActionResult GetAll(string? status)
         {
-            var orders = unitOfWork._OrderHeader.GetAll(includes: o=>o.User);
+            IEnumerable<OrderHeader> orders;
 
-            if (status != null)
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            //if user is an admin or emp then he can only view his orders
+            if(User.IsInRole(StaticDetails.Admin) || User.IsInRole(StaticDetails.Employee))
             {
-                 orders = unitOfWork._OrderHeader.GetAll(s => s.OrderStatus == status, includes: o => o.User);
+                orders = unitOfWork._OrderHeader.GetAll(includes: o=>o.User);   
+            }
+            else //else manage ur own orders
+            {
+                orders = unitOfWork._OrderHeader.GetAll(filter: o=>o.UserId == userId, includes: o=> o.User);
+            }
+            if (status != null && (User.IsInRole(StaticDetails.Admin) || User.IsInRole(StaticDetails.Employee))) //if the user clicked on a certain status then get the orders of that one
+            {
+                orders = unitOfWork._OrderHeader.GetAll(s => s.OrderStatus == status, includes: o => o.User);
+
+            }
+            if (status != null && !(User.IsInRole(StaticDetails.Admin) || User.IsInRole(StaticDetails.Employee))) //if the user clicked on a certain status then get the orders of that one
+            {
+                orders = unitOfWork._OrderHeader.GetAll(s => (s.OrderStatus == status && s.UserId == userId), includes: o => o.User);
 
             }
             return Json(new { data = orders});

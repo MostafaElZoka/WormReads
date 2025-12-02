@@ -6,7 +6,7 @@ $(document).ready(function () {
     if (status) {
         ajaxUrl += `?status=${status}`
     }
-    var list = document.querySelectorAll('#list .list-group-item');
+    //var list = document.querySelectorAll('#list .list-group-item');
 
     //list.forEach(item => {
     //    item.addEventListener('click', function () {
