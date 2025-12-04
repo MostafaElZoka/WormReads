@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WormReads.Application;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
@@ -8,6 +9,7 @@ using WormReads.Models.ViewModels;
 namespace WormReads.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class OrderController(IUnitOfWork unitOfWork) : Controller
     {
         [BindProperty]
@@ -25,6 +27,8 @@ namespace WormReads.Areas.Admin.Controllers
             };
             return View(OrderVM);
         }
+        [HttpPost]
+        [Authorize(Roles =StaticDetails.Admin+", "+StaticDetails.Employee)]
         public IActionResult UpdateOrderDetails()
         {
             var orderHeaderFromDb = unitOfWork._OrderHeader.Get(o => o.Id == OrderVM.OrderHeader.Id);
@@ -47,7 +51,29 @@ namespace WormReads.Areas.Admin.Controllers
             TempData["success"] = "Order was updated successfully";
             return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id });
         }
-        
+        [HttpPost]
+        [Authorize(Roles = StaticDetails.Admin + ", " + StaticDetails.Employee)]
+        public IActionResult StartProcessing()
+        {
+            unitOfWork._OrderHeader.UpdateOrderStatus(OrderVM.OrderHeader.Id, StaticDetails.StatusInProcess);
+            unitOfWork.Save();
+            return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id });
+
+        }
+        [HttpPost]
+        [Authorize(Roles = StaticDetails.Admin + ", " + StaticDetails.Employee)]
+        public IActionResult StartShipping()
+        {
+            //unitOfWork._OrderHeader.UpdateOrderStatus(OrderVM.OrderHeader.Id, StaticDetails.StatusInProcess);
+            var orderFromDb = unitOfWork._OrderHeader.Get(o => o.Id == OrderVM.OrderHeader.Id);
+            orderFromDb.OrderStatus = StaticDetails.StatusShipped;
+            orderFromDb.Carrier = OrderVM.OrderHeader.Carrier;
+            orderFromDb.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
+            unitOfWork._OrderHeader.Update(orderFromDb);
+            unitOfWork.Save();
+            return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id });
+
+        }
 
         #region API
         public IActionResult GetAll(string? status)
