@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using Stripe;
 using System.Security.Claims;
 using WormReads.Application;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
@@ -57,6 +59,7 @@ namespace WormReads.Areas.Admin.Controllers
         {
             unitOfWork._OrderHeader.UpdateOrderStatus(OrderVM.OrderHeader.Id, StaticDetails.StatusInProcess);
             unitOfWork.Save();
+            TempData["success"] = "Order was processed successfully";
             return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id });
 
         }
@@ -64,15 +67,49 @@ namespace WormReads.Areas.Admin.Controllers
         [Authorize(Roles = StaticDetails.Admin + ", " + StaticDetails.Employee)]
         public IActionResult StartShipping()
         {
-            //unitOfWork._OrderHeader.UpdateOrderStatus(OrderVM.OrderHeader.Id, StaticDetails.StatusInProcess);
             var orderFromDb = unitOfWork._OrderHeader.Get(o => o.Id == OrderVM.OrderHeader.Id);
             orderFromDb.OrderStatus = StaticDetails.StatusShipped;
             orderFromDb.Carrier = OrderVM.OrderHeader.Carrier;
             orderFromDb.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
+            orderFromDb.ShippingDate = DateTime.Now;
+            //if a company is making a delayed payment we delay the payment due date by 30 days
+            if(orderFromDb.PaymentStatus == StaticDetails.PaymentStatusDelayedPayment)
+            {
+                orderFromDb.PaymentDueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(30));
+            }
             unitOfWork._OrderHeader.Update(orderFromDb);
             unitOfWork.Save();
+            TempData["success"] = "Order was shipped successfully";
             return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id });
 
+        }
+        [HttpPost]
+        [Authorize(Roles = StaticDetails.Admin + ", " + StaticDetails.Employee)]
+        public IActionResult CancelOrder()
+        {
+            var order = unitOfWork._OrderHeader.Get(o => o.Id == OrderVM.OrderHeader.Id);
+            //if customer already paid then we refund him using stripe
+            if(order.PaymentStatus == StaticDetails.PaymentStatusApproved)
+            {
+                var options = new RefundCreateOptions
+                {
+                    Reason = RefundReasons.RequestedByCustomer,
+                    PaymentIntent = order.PaymentIntentId
+                };
+                
+                var service = new RefundService(); //This creates a RefundService object from the Stripe SDK. Think of it as the module responsible for talking to Stripe’s refund API.
+
+                var refund = service.Create(options); //This actually sends the refund request to Stripe using the parameters you defined in options.
+
+                unitOfWork._OrderHeader.UpdateOrderStatus(order.Id, StaticDetails.StatusCancelled, StaticDetails.StatusRefunded);
+            }
+            else
+            {
+                unitOfWork._OrderHeader.UpdateOrderStatus(order.Id, StaticDetails.StatusCancelled, StaticDetails.StatusCancelled);
+            }
+            unitOfWork.Save();
+            TempData["success"] = "Order was cancelled successfully";
+            return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id });
         }
 
         #region API
