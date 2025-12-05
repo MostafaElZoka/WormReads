@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Stripe;
+using Stripe.Checkout;
 using System.Security.Claims;
 using WormReads.Application;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
@@ -29,6 +30,70 @@ namespace WormReads.Areas.Admin.Controllers
             };
             return View(OrderVM);
         }
+
+        [HttpPost]
+        [Authorize(Roles = StaticDetails.Admin + ", " + StaticDetails.Employee)]
+        public IActionResult Details() //for paying delayed orders usign the pay now button
+        {
+             OrderVM.OrderHeader = unitOfWork._OrderHeader.Get(o=>o.Id == OrderVM.OrderHeader.Id, includes: o => o.User);
+            OrderVM.OrderDetails = unitOfWork._OrderDetails.GetAll(d => d.OrderHeaderId == OrderVM.OrderHeader.Id, includes: d => d.Product);
+
+            //stripe logic
+            var domain = "https://localhost:7119";
+            var options = new Stripe.Checkout.SessionCreateOptions
+            {
+                SuccessUrl = domain + $"/admin/order/PaymentConfirmed?id={OrderVM.OrderHeader.Id}",
+                CancelUrl = domain + $"/admin/order/details/{OrderVM.OrderHeader.Id}",
+                LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
+                Mode = "payment",
+            };
+            foreach (var item in OrderVM.OrderDetails)
+            {
+                var sessionLineItem = new SessionLineItemOptions
+                {
+
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(item.Price * 100),
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Product.Title
+                        }
+                    },
+                    Quantity = item.Count
+                };
+                options.LineItems.Add(sessionLineItem);
+            }
+            var service = new Stripe.Checkout.SessionService();
+            Stripe.Checkout.Session session = service.Create(options);
+
+            unitOfWork._OrderHeader.UpdateStripePropertiesStatuses(OrderVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+            unitOfWork.Save();
+            return Redirect(session.Url);
+
+        }
+        public IActionResult PaymentConfirmed(int id) //redirecting to success payment
+        {
+            //var orderId = id;
+            var orderHeader = unitOfWork._OrderHeader.Get(o => o.Id == id);
+
+            var service = new SessionService();
+            var session = service.Get(orderHeader.SessionId);
+
+            if (session.PaymentStatus.ToLower() == "paid") //the user paid and transaction completed successfully
+            {
+                unitOfWork._OrderHeader.UpdateStripePropertiesStatuses(orderHeader.Id, session.Id, session.PaymentIntentId);
+                unitOfWork._OrderHeader.UpdateOrderStatus(orderHeader.Id, StaticDetails.StatusApproved, StaticDetails.PaymentStatusApproved);
+                unitOfWork.Save();
+            }
+            var shoppingItems = unitOfWork._ShoppingCart.GetAll(s => s.UserId == orderHeader.UserId);
+            unitOfWork._ShoppingCart.RemoveRange(shoppingItems);
+            unitOfWork.Save();
+
+            return View(id);
+        }
+
         [HttpPost]
         [Authorize(Roles =StaticDetails.Admin+", "+StaticDetails.Employee)]
         public IActionResult UpdateOrderDetails()
