@@ -1,4 +1,7 @@
 ﻿@using WormReads.Application
+@{
+    
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,6 +49,7 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
                                 <i class="bi bi-cart"></i>&nbsp;
+                                (@(Context.Session.GetInt32(StaticDetails.CartSession) == null ? 0 : Context.Session.GetInt32(StaticDetails.CartSession)))
                             </a>
                         </li>
                     </ul>

@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using WormReads.Application;
 using WormReads.DataAccess.Repository.Unit_Of_Work;
 using WormReads.Models;
 
@@ -34,17 +36,18 @@ namespace WormReads.Areas.Customer.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             cart.UserId = userId;
             var cartFromDb = unitOfWork._ShoppingCart.Get(c => c.UserId == userId && c.ProductId == cart.ProductId);
-
-            if(cartFromDb != null) ///cart item already exists in DB for the same user
+            if(cartFromDb != null) /// item already exists in DB for the same user
             {
                 cartFromDb.Count += cart.Count;
+                unitOfWork.Save();
                 //unitOfWork._ShoppingCart.Update(cartFromDb);
             }
-            else //new cart item for the user
+            else //new item for the user
             {
                 unitOfWork._ShoppingCart.Add(cart);
+                unitOfWork.Save();
+                HttpContext.Session.SetInt32(StaticDetails.CartSession, unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId).Count());
             }
-            unitOfWork.Save();
             TempData["success"] = "Item Added To Cart Successfully";
             return RedirectToAction(nameof(Index));
         }

@@ -54,6 +54,15 @@ namespace WormReads
 
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe")); //mapping stripe section into stripe class
 
+            //configurations for consuming sessions
+            builder.Services.AddDistributedMemoryCache(); //This is required before you can use Session.
+            builder.Services.AddSession(o =>
+            {
+                o.IdleTimeout = TimeSpan.FromMinutes(100);
+                o.Cookie.IsEssential = true; //This session cookie is essential for the site to function.
+                o.Cookie.HttpOnly = true; //Good security practice 
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -69,7 +78,7 @@ namespace WormReads
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseSession(); //to use sessions
             app.MapStaticAssets();
 
             StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();//configuring stripe 
