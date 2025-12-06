@@ -15,6 +15,15 @@ namespace WormReads.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
+            //we want to display the cart items count once the user logs in
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userId != null)
+            {
+                HttpContext.Session.SetInt32(StaticDetails.CartSession,
+                    unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId.Value).Count());
+            }
             var products = unitOfWork._Product.GetAll(includes: p => p.Category);
             return View(products);
         }        
@@ -46,7 +55,8 @@ namespace WormReads.Areas.Customer.Controllers
             {
                 unitOfWork._ShoppingCart.Add(cart);
                 unitOfWork.Save();
-                HttpContext.Session.SetInt32(StaticDetails.CartSession, unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId).Count());
+                HttpContext.Session.SetInt32(StaticDetails.CartSession,
+                    unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId).Count());
             }
             TempData["success"] = "Item Added To Cart Successfully";
             return RedirectToAction(nameof(Index));

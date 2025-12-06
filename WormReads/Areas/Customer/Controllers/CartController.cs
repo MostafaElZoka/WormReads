@@ -13,10 +13,17 @@ namespace WormReads.Areas.Customer.Controllers
     [Authorize]
     public class CartController(IUnitOfWork unitOfWork) : Controller
     {
+        private string userId { get
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                return claim;
+            }
+        }
         public IActionResult Index()
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //var claimsIdentity = (ClaimsIdentity)User.Identity;
+            //var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             var shoppingCart = new ShoppingCartVM
             {
                 ShoppingCartItems = unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId, includes: c => c.Product),
@@ -203,9 +210,12 @@ namespace WormReads.Areas.Customer.Controllers
         public IActionResult minus(int id)
         {
             var cartItem = unitOfWork._ShoppingCart.Get(p => p.Id == id);
-            cartItem.Count--;
-            unitOfWork._ShoppingCart.Update(cartItem);
-            unitOfWork.Save();
+            if(cartItem.Count > 1)
+            {
+                cartItem.Count--;
+                unitOfWork._ShoppingCart.Update(cartItem);
+                unitOfWork.Save();
+            }
             return RedirectToAction(nameof(Index));
         }
         public IActionResult remove(int id)
@@ -213,6 +223,8 @@ namespace WormReads.Areas.Customer.Controllers
             var cartItem = unitOfWork._ShoppingCart.Get(p => p.Id == id);
             unitOfWork._ShoppingCart.Remove(cartItem);
             unitOfWork.Save();
+            HttpContext.Session.SetInt32(StaticDetails.CartSession,
+                    unitOfWork._ShoppingCart.GetAll(c => c.UserId == userId).Count());
             return RedirectToAction(nameof(Index));
         }
     }
