@@ -1,6 +1,6 @@
 ﻿@using WormReads.Application
 @{
-    
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -18,11 +18,11 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary border-bottom box-shadow mb-3" data-bs-theme = "dark">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary border-bottom box-shadow mb-3" data-bs-theme="dark">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WormReads</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -35,16 +35,18 @@
                         </li>
                         @if(User.IsInRole(StaticDetails.Admin))
                         {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Content Management
-                            </a>
-                            <ul class="dropdown-menu bg-white">
-                                <li><a class="dropdown-item text-black-50 dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a></li>
-                                <li><a class="dropdown-item text-black-50 dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a></li>
-                                <li><a class="dropdown-item text-black-50 dropdown-item" asp-area="Admin" asp-controller="Company" asp-action="Index">Companies</a></li>
-                            </ul>
-                        </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Content Management
+                                </a>
+                                <ul class="dropdown-menu bg-white">
+                                    <li><a class="dropdown-item text-black-50 dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a></li>
+                                    <li><a class="dropdown-item text-black-50 dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a></li>
+                                    <li><a class="dropdown-item text-black-50 dropdown-item" asp-area="Admin" asp-controller="Company" asp-action="Index">Companies</a></li>
+                                    <li> <hr class ="dropdown-center text-black" /></li>
+                                    <li><a class="dropdown-item text-black-50 dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create User</a></li>
+                                </ul>
+                            </li>
                         }
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
