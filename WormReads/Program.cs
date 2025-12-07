@@ -63,6 +63,12 @@ namespace WormReads
                 o.Cookie.HttpOnly = true; //Good security practice 
             });
 
+            builder.Services.AddAuthentication().AddFacebook(options =>
+            {
+                options.AppId = "1416005980096492";
+                options.AppSecret = "1986907b6020ab26470c300555186680";
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

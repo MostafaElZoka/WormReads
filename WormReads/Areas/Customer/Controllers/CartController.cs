@@ -195,6 +195,7 @@ namespace WormReads.Areas.Customer.Controllers
             }
             var shoppingItems = unitOfWork._ShoppingCart.GetAll(s => s.UserId == orderHeader.UserId);
             unitOfWork._ShoppingCart.RemoveRange(shoppingItems);
+            HttpContext.Session.Clear(); //clearing the cart count UI
             unitOfWork.Save();
 
             return View(orderId);
